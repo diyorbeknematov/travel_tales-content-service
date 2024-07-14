@@ -1,0 +1,3 @@
+[submodule "travel_tales-grpc-proto"]
+	path = travel_tales-grpc-proto
+	url = git@github.com:diyorbeknematov/travel_tales-grpc-proto.git
