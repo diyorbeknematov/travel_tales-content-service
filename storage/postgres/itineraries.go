@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"content-service/generated/communication"
 	pb "content-service/generated/itineraries"
 	"content-service/models"
 	"database/sql"
@@ -325,4 +326,104 @@ func (repo *ItinerariesRepo) GetItineraryActivity(id string) ([]string, error) {
 	}
 
 	return destinations, nil
+}
+
+func (repo *ItinerariesRepo) CreateItineraryComments(req *pb.LeaveCommentRequest) (*pb.LeaveCommentResponse, error) {
+	var resp pb.LeaveCommentResponse
+
+	err := repo.DB.QueryRow(`
+		INSERT INTO itinerary_comments (
+			author_id,
+			itinerary_id
+			content,
+		)
+		VALUES (
+			$1,
+			$2,
+			$3
+		)
+		RETURNING
+			id,
+			content,
+			author_id,
+			itinerary_id,
+			created_at
+	`, req.AuthorId, req.ItineraryId, req.Content).Scan(&resp.Id, &resp.Content, &resp.AuthorId, &resp.ItineraryId, &resp.CreatedAt)
+
+	return &resp, err
+}
+
+func (repo *ItinerariesRepo) CountItinerary(id string) (int32, error) {
+	var total int32
+	err := repo.DB.QueryRow(`
+		SELECT 
+			COUNT(*) 
+		FROM 
+			itineraries
+		WHERE
+			(deleted_at = 0) AND (user_id = $1 or id = $2) 
+	`).Scan(&total)
+
+	if err != nil {
+		repo.Logger.Error("error counting stories", slog.String("error", err.Error()))
+		return -1, err
+	}
+
+	return total, nil
+}
+
+func (repo *ItinerariesRepo) CountItineraryComments(id string) (int32, error) {
+	var total int32
+	err := repo.DB.QueryRow(`
+		SELECT 
+			COUNT(*) 
+		FROM 
+			itineraries
+		WHERE
+			(deleted_at = 0) AND (user_id = $1 or id = $2) 
+	`).Scan(&total)
+
+	if err != nil {
+		repo.Logger.Error("error counting stories", slog.String("error", err.Error()))
+		return -1, err
+	}
+
+	return total, nil
+}
+
+func (repo *ItinerariesRepo) TotalCountriesVisited(id string) (int32, error) {
+	var total int32
+
+	err := repo.DB.QueryRow(`
+		SELECT 
+			COUNT(DISTINCT destination_id) 
+		FROM 
+			itinerary_destinations id
+		JOIN 
+			itineraries i ON id.itinerary_id = i.id
+		WHERE 
+			i.author_id = $1 AND i.deleted_at = 0;
+	`, id).Scan(&total)
+
+	return total, err
+}
+
+func (repo *ItinerariesRepo) MostPopularItinerary(id string) (*communication.MostPopularItinerary, error) {
+	var resp communication.MostPopularItinerary
+
+	err := repo.DB.QueryRow(`
+		SELECT 
+			id, 
+			title, 
+			likes_count 
+		FROM 
+			itineraries 
+		WHERE 
+			author_id = $1 AND deleted_at = 0 
+		ORDER BY 
+			likes_count DESC 
+		LIMIT 1;
+	`, id).Scan(&resp.Id, &resp.Title, &resp.LikesCount)
+	
+	return &resp, err
 }

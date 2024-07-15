@@ -132,6 +132,12 @@ func (s *ItineraryService) GetItinerary(ctx context.Context, in *pb.GetItinerary
 	return itinerary, nil
 }
 
-// func (s *ItineraryService) LeaveComment(ctx context.Context, in *pb.LeaveCommentRequest) (*pb.LeaveCommentResponse) {
+func (s *ItineraryService) LeaveComment(ctx context.Context, in *pb.LeaveCommentRequest) (*pb.LeaveCommentResponse, error) {
+	resp, err := s.ItineraryRepo.CreateItineraryComments(in)
+	if err != nil {
+		s.Logger.Error("xatolik comment qoldirishda", slog.String("error", err.Error()))
+		return nil, err
+	}
 
-// }
+	return resp, nil
+}

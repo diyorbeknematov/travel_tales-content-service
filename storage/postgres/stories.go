@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"content-service/generated/communication"
 	pb "content-service/generated/stories"
 	"content-service/models"
 	"database/sql"
@@ -331,7 +332,30 @@ func (repo *TravelStoriesRepo) AddLike(req *pb.AddLikeRequest) (*pb.AddLikeRespo
 	return &resp, nil
 }
 
-func (repo *TravelStoriesRepo) CountStories() (int32, error) {
+func (repo *TravelStoriesRepo) CreateStoryTags(req models.StoryTag) (error) {
+	_, err := repo.DB.Exec(`
+		INSERT INTO story_tags (
+			story_id,
+			tag
+		)
+		VALUES (
+			$1,
+			$2
+		)
+		RETURNING
+			tag
+	`, req.StoryId, req.Tag)
+
+	if err != nil {
+		repo.Logger.Error("Error in created story_tags", slog.String("error", err.Error()))
+		return err
+	}
+
+	return nil
+}
+
+
+func (repo *TravelStoriesRepo) CountStories(id string) (int32, error) {
 	var total int32
 	err := repo.DB.QueryRow(`
 		SELECT 
@@ -339,7 +363,7 @@ func (repo *TravelStoriesRepo) CountStories() (int32, error) {
 		FROM 
 			stories
 		WHERE
-			deleted_at = 0
+			(deleted_at = 0) AND (user_id = $1 or id = $2) 
 	`).Scan(&total)
 
 	if err != nil {
@@ -392,24 +416,22 @@ func (repo *TravelStoriesRepo) CountLikes(id string) (int32, error) {
 	return total, nil
 }
 
-func (repo *TravelStoriesRepo) CreateStoryTags(req models.StoryTag) (error) {
-	_, err := repo.DB.Exec(`
-		INSERT INTO story_tags (
-			story_id,
-			tag
-		)
-		VALUES (
-			$1,
-			$2
-		)
-		RETURNING
-			tag
-	`, req.StoryId, req.Tag)
+func (repo *TravelStoriesRepo) MostPopularStory(id string) (*communication.MostPopularStory, error) {
+	var resp communication.MostPopularStory
 
-	if err != nil {
-		repo.Logger.Error("Error in created story_tags", slog.String("error", err.Error()))
-		return err
-	}
+	err := repo.DB.QueryRow(`
+		SELECT 
+			id, 
+			title, 
+			likes_count 
+		FROM 
+			stories 
+		WHERE 
+			author_id = $1 AND deleted_at = 0 
+		ORDER BY 
+			likes_count DESC 
+		LIMIT 1;
+	`, id).Scan(&resp.Id, &resp.Title, &resp.LikesCount)
 
-	return nil
+	return &resp, err
 }

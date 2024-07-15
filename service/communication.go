@@ -10,6 +10,8 @@ import (
 
 type CommunicationService struct {
 	CommunicationRepo *postgres.CommenicationRepo
+	StoryRepo 		  *postgres.TravelStoriesRepo
+	ItineraryRepo 	  *postgres.ItinerariesRepo
 	UserClient        user.AuthServiceClient
 	Logger            *slog.Logger
 }
@@ -79,4 +81,58 @@ func (s *CommunicationService) GetTravelTips(ctx context.Context, in *pb.GetTrav
 	}
 
 	return tips, nil
+}
+
+func (s *CommunicationService) GetUserStatics(ctx context.Context, in *pb.GetUserStaticsRequest) (*pb.GetUserStaticsResponse, error) {
+	totalStories, err := s.StoryRepo.CountStories(in.UserId)
+	if err != nil {
+		s.Logger.Error("Xatolik userning hikoyalar sonini olishda", slog.String("error", err.Error()))
+		return nil, err
+	}
+
+	totalIntineraries, err := s.ItineraryRepo.CountItinerary(in.UserId)
+	if err != nil {
+		s.Logger.Error("Xatolik userning sayohat rejalarini sonini olishda", slog.String("error", err.Error()))
+		return nil, err
+	}
+
+	totalCountryViseted, err := s.ItineraryRepo.TotalCountriesVisited(in.UserId)
+	if err != nil {
+		s.Logger.Error("Xatolik userning sayohat qilgan davlatlar sonini olishda", slog.String("error", err.Error()))
+		return nil, err
+	}
+
+	totalLikesReceived, err := s.StoryRepo.CountLikes(in.UserId)
+	if err != nil {
+		s.Logger.Error("Xatolik userning hikoyalariga bosilgan likelar sonini olishda", slog.String("error", err.Error()))
+		return nil, err
+	}
+
+	totalCommentsReceived, err := s.StoryRepo.CountComments(in.UserId)
+	if err != nil {
+		s.Logger.Error("Xatolik userning hikoyalariga yozilgan commentlar sonini olishda", slog.String("error", err.Error()))
+		return nil, err
+	}
+
+	mostPopularItinerary, err := s.ItineraryRepo.MostPopularItinerary(in.UserId)
+	if err != nil {
+		s.Logger.Error("Xatolik userning mashhur sayohat rejarlarini olishda", slog.String("error", err.Error()))
+		return nil, err
+	}
+
+	mostPopularStory, err := s.StoryRepo.MostPopularStory(in.UserId)
+	if err != nil {
+		s.Logger.Error("Xatolik userning mashhur sayohat hikoyalarini olishda", slog.String("error", err.Error()))
+		return nil, err
+	}
+
+	return &pb.GetUserStaticsResponse{
+		TotalStories: totalStories,
+		TotalItineraries: totalIntineraries,
+		TotalCountriesVisited: totalCountryViseted,
+		TotalLikesReceived: totalLikesReceived,
+		TotalCommentsReceived: totalCommentsReceived,
+		MostPopularStory: mostPopularStory,
+		MostPopularItinerary: mostPopularItinerary,
+	}, nil
 }

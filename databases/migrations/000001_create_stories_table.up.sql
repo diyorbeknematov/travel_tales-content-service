@@ -60,6 +60,14 @@ CREATE TABLE IF NOT EXISTS itinerary_activities (
     activity TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS itinerary_comments (
+    id UUID PRIMARY KEY,
+    content TEXT NOT NULL,
+    author_id UUID NOT NULL,
+    itinerary_id UUID REFERENCES itineraries(id),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS destinations (
     id UUID PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
