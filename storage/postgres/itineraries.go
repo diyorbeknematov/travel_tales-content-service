@@ -2,24 +2,25 @@ package postgres
 
 import (
 	pb "content-service/generated/itineraries"
+	"content-service/models"
 	"database/sql"
 	"errors"
 	"log/slog"
 )
 
 type ItinerariesRepo struct {
-	DB *sql.DB
+	DB     *sql.DB
 	Logger *slog.Logger
 }
 
 func NewItinerariesRepo(db *sql.DB, logger *slog.Logger) *ItinerariesRepo {
 	return &ItinerariesRepo{
-		DB: db,
+		DB:     db,
 		Logger: logger,
 	}
 }
 
-func(repo *ItinerariesRepo) CreateItinerary(req *pb.CreateItineraryRequest) (*pb.CreateItineraryResponse, error) {
+func (repo *ItinerariesRepo) CreateItinerary(req *pb.CreateItineraryRequest) (*pb.CreateItineraryResponse, error) {
 	var resp pb.CreateItineraryResponse
 
 	err := repo.DB.QueryRow(`
@@ -46,7 +47,7 @@ func(repo *ItinerariesRepo) CreateItinerary(req *pb.CreateItineraryRequest) (*pb
 			author_id,
 			created_at
 	`, req.Title, req.Description, req.StartDate, req.EndDate, req.AthorId).
-	Scan(&resp.Id, &resp.Title, &resp.Description, &resp.StartDate, &resp.EndDate, &resp.AuthorId, &resp.CreatedAt)
+		Scan(&resp.Id, &resp.Title, &resp.Description, &resp.StartDate, &resp.EndDate, &resp.AuthorId, &resp.CreatedAt)
 
 	if err != nil {
 		repo.Logger.Error("Error in created itineraries", slog.String("error", err.Error()))
@@ -99,7 +100,7 @@ func (repo *ItinerariesRepo) DeleteItinerary(id string) (*pb.DeleteItineraryResp
 
 	// Nechta qator o'chirilganini tekshirish
 	rowsAffected, err := res.RowsAffected()
-	if err != nil  {
+	if err != nil {
 		repo.Logger.Error("Error in getting rows affected", slog.String("error", err.Error()))
 		return nil, err
 	}
@@ -187,7 +188,141 @@ func (repo *ItinerariesRepo) ListItineraries(req *pb.ListItinerariesRequest) (*p
 		return nil, err
 	}
 
+	var total int32
+	err = repo.DB.QueryRow(`
+		SELECT 
+			COUNT(*) 
+		FROM
+			itineraries
+		WHERE
+			deleted_at = 0
+	`).Scan(&total)
+
+	if err != nil {
+		repo.Logger.Error("error counting itinerary", slog.String("error", err.Error()))
+		return nil, err
+	}
+
 	return &pb.ListItinerariesResponse{
 		Itineraries: resp,
+		Total:       total,
+		Limit:       req.Limit,
+		Page:        req.Page,
 	}, nil
+}
+
+func (repo *ItinerariesRepo) CreateItineraryDestinations(req models.ItineraryDestination) error {
+	_, err := repo.DB.Exec(`
+		INSERT INTO itinerary_destinations (
+			itinerary_id,
+			name,
+			start_date,
+			end_date
+		)
+		VALUES (
+			$1,
+			$2,
+			$3,
+			$4
+		)
+	`, req.ItineraryId, req.Name, req.StartDate, req.EndDate)
+
+	if err != nil {
+		repo.Logger.Error("Error in create itinerary_destinations", slog.String("error", err.Error()))
+		return err
+	}
+
+	return nil
+}
+
+func (repo *ItinerariesRepo) CreateItineraryActivity(req models.ItineraryActivity) error {
+	_, err := repo.DB.Exec(`
+		INSERT INTO itinerary_activities (
+			destination_id,
+			activity
+		)
+		VALUES (
+			$1,
+			$2
+		)
+	`, req.DestinationId, req.Activity)
+
+	if err != nil {
+		repo.Logger.Error("Error in created itinerary_activities", slog.String("error", err.Error()))
+		return err
+	}
+
+	return nil
+}
+
+func (repo *ItinerariesRepo) GetItineraryDestinations(id string) ([]models.Result, error) {
+	var	destinations  []models.Result
+	rows, err := repo.DB.Query(`
+		SELECT
+			id
+			name,
+			start_date,
+			end_date
+		FROM
+			itinerary_destinations i_d
+		JOIN 
+			itineraries i ON i.id = i_d.itinerary_id
+		WHERE
+			i.deleted_at = 0 and i_d.itinerary_id = $1
+	`, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var res models.Result
+
+		err = rows.Scan(res.ID, &res.Name, &res.StartDate, &res.EndDate,)
+		if err != nil {
+			return nil, err
+		}
+
+		destinations = append(destinations, res)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return destinations, nil
+}
+
+func (repo *ItinerariesRepo) GetItineraryActivity(id string) ([]string, error) {
+	var destinations []string
+
+	rows, err := repo.DB.Query(`
+		SELECT
+			activity
+		FROM
+			itinerary_activities 
+		WHERE
+			destination_id = $1
+	`, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var res string
+
+		err = rows.Scan(&res)
+		if err != nil {
+			return nil, err
+		}
+
+		destinations = append(destinations, res)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return destinations, nil
 }

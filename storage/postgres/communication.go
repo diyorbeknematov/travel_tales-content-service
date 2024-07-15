@@ -91,8 +91,25 @@ func (repo *CommenicationRepo) GetMessages(req *pb.ListMessageRequest) (*pb.List
 		return nil, err
 	}
 
+	var total int32
+	err = repo.DB.QueryRow(`
+		SELECT 
+			COUNT(*) 
+		FROM 
+			messages
+	`, ).Scan(&total)
+
+	if err != nil {
+		repo.Logger.Error("error counting messages", slog.String("error", err.Error()))
+		return nil, err
+	}
+
+
 	return &pb.ListMessageResponse{
 		Message: resp,
+		Limit: req.Limit,
+		Page: req.Page,
+		Total: total,
 	}, nil
 }
 
@@ -176,8 +193,25 @@ func (repo *CommenicationRepo) GetTravelTips(req *pb.GetTravelTipsRequest) (*pb.
 	if err = rows.Err(); err != nil {
 		return nil, err
 	}
+
+	var total int32
+	err = repo.DB.QueryRow(`
+		SELECT 
+			COUNT(*) 
+		FROM
+			travel_tips
+	`).Scan(&total)
+
+	if err != nil {
+		repo.Logger.Error("error counting travel_tips", slog.String("error", err.Error()))
+		return nil, err
+	}
+
 	return &pb.GetTravelTipsResponse{
 		Tips: resp,
+		Limit: req.Limit,
+		Page: req.Page,
+		Total: total,
 	}, nil
 }
 

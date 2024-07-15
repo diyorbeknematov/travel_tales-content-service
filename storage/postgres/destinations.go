@@ -19,6 +19,48 @@ func NewDestinationRepo(db *sql.DB, logger *slog.Logger) *DestinationRepo {
 	}
 }
 
+func (repo *DestinationRepo) CreateDestination(req *pb.AddDestinationRequest) (*pb.AddDestionationResponse, error) {
+	var resp pb.AddDestionationResponse
+
+	err := repo.DB.QueryRow(`
+		INSERT INTO destinations (
+			name,
+			country,
+			description,
+			best_time_to_visit,
+			average_cost_per_day,
+			currency,
+			language
+		)
+		VALUES (
+			$1,
+			$2,
+			$3,
+			$4,
+			$5,
+			$6,
+			$7
+		)
+		RETURNING
+			id,
+			name,
+			country,
+			description,
+			best_time_to_visit,
+			average_cost_per_day,
+			currency,
+			language,
+			created_at
+	`, req.Name, req.Country, req.Description, req.BestTimeToVisit, req.AverageCostPerDay, req.Currency, req.Language).
+		Scan(&resp.Id, &resp.Name, &resp.Country, &resp.Description, &resp.BestTimeToVisit, &resp.AverageCostPerDay, &resp.Currency, &resp.Language, &resp.CreatedAt)
+
+	if err != nil {
+		repo.Logger.Error("Error in created destination", slog.String("error", err.Error()))
+		return nil, err
+	}
+	return &resp, nil
+}
+
 func (repo *DestinationRepo) GetDestinations(req *pb.ListDetinationRequest) (*pb.ListDetinationResponse, error) {
 	var resp []*pb.Destination
 	offset := (req.Page - 1) * req.Limit
@@ -62,12 +104,30 @@ func (repo *DestinationRepo) GetDestinations(req *pb.ListDetinationRequest) (*pb
 		return nil, err
 	}
 
+	var total int32
+	err = repo.DB.QueryRow(`
+		SELECT 
+			COUNT(*) 
+		FROM
+			destinations
+		WHERE
+			deleted_at = 0
+	`).Scan(&total)
+
+	if err != nil {
+		repo.Logger.Error("error counting destinations", slog.String("error", err.Error()))
+		return nil, err
+	}
+
 	return &pb.ListDetinationResponse{
 		Destinations: resp,
+		Total: total,
+		Limit: req.Limit,
+		Page: req.Page,
 	}, nil
 }
 
-func (repo *DestinationRepo) GetTravelDestinations(id string) (*pb.GetDestinationResponse, error) {
+func (repo *DestinationRepo) GetTravelDestination(id string) (*pb.GetDestinationResponse, error) {
 	var resp pb.GetDestinationResponse
 
 	err := repo.DB.QueryRow(`

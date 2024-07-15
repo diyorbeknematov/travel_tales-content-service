@@ -2,6 +2,7 @@ package postgres
 
 import (
 	pb "content-service/generated/stories"
+	"content-service/models"
 	"database/sql"
 	"log/slog"
 )
@@ -113,7 +114,7 @@ func (repo *TravelStoriesRepo) DeleteTravelStory(id string) (*pb.DeleteTravelSto
 }
 
 func (repo *TravelStoriesRepo) GetTravelStories(req *pb.ListTravelStoryRequest) (*pb.ListTravelStoryResponse, error) {
-	var resp []*pb.TravelStory	
+	var resp []*pb.TravelStory
 	offset := (req.Page - 1) * req.Limit
 
 	rows, err := repo.DB.Query(`
@@ -150,13 +151,31 @@ func (repo *TravelStoriesRepo) GetTravelStories(req *pb.ListTravelStoryRequest) 
 
 		resp = append(resp, &story)
 	}
-
 	if err = rows.Err(); err != nil {
 		return nil, err
 	}
 
+	var total int32
+	err = repo.DB.QueryRow(`
+		SELECT 
+			COUNT(*) 
+		FROM 
+			stories
+		WHEEW 
+			deleted_at = 0
+	`).Scan(&total)
+
+	if err != nil {
+		repo.Logger.Error("error counting stories", slog.String("error", err.Error()))
+		return nil, err
+	}
+
+
 	return &pb.ListTravelStoryResponse{
 		Stories: resp,
+		Total: total,
+		Limit: req.Limit,
+		Page: req.Page,
 	}, nil
 }
 
@@ -178,7 +197,7 @@ func (repo *TravelStoriesRepo) GetTravelStory(id string) (*pb.GetTravelStoryResp
 		WHERE
 			deleted_at = 0 AND id = $1
 	`, id).Scan(&resp.Id, &resp.Title, &resp.Content, &resp.Location, &author.Id, &resp.CreatedAt, &resp.UpdatedAt)
-	
+
 	if err != nil {
 		repo.Logger.Error("Error in get travel story", slog.String("error", err.Error()))
 		return nil, err
@@ -220,6 +239,7 @@ func (repo *TravelStoriesRepo) AddComment(req *pb.AddCommentRequest) (*pb.AddCom
 
 func (repo *TravelStoriesRepo) GetComments(req *pb.ListCommentsRequest) (*pb.ListCommentsResponse, error) {
 	var resp []*pb.Comment
+	offset := (req.Page - 1) * req.Limit
 
 	rows, err := repo.DB.Query(`
 		SELECT
@@ -233,7 +253,9 @@ func (repo *TravelStoriesRepo) GetComments(req *pb.ListCommentsRequest) (*pb.Lis
 			stories s ON c.story_id = s.id 
 		WHERE
 			s.deleted_at = 0
-	`)
+		OFFSET $1
+		LIMIT $1
+	`, offset, req.Limit)
 
 	if err != nil {
 		repo.Logger.Error("Error in get comments", slog.String("error", err.Error()))
@@ -244,7 +266,7 @@ func (repo *TravelStoriesRepo) GetComments(req *pb.ListCommentsRequest) (*pb.Lis
 	for rows.Next() {
 		var comment pb.Comment
 		var author pb.Authors
-		
+
 		err := rows.Scan(&comment.Id, &comment.Content, &author.Id, &comment.CreatedAt)
 		if err != nil {
 			repo.Logger.Error("Error scanning comment", slog.String("error", err.Error()))
@@ -259,7 +281,29 @@ func (repo *TravelStoriesRepo) GetComments(req *pb.ListCommentsRequest) (*pb.Lis
 		return nil, err
 	}
 
-	return &pb.ListCommentsResponse{Comments: resp}, nil
+	var total int32
+	err = repo.DB.QueryRow(`
+		SELECT 
+			COUNT(*) 
+		FROM 
+			comments c
+		JOIN 
+			stories s ON c.story_id = s.id
+		WHEEW 
+			deleted_at = 0
+	`).Scan(&total)
+
+	if err != nil {
+		repo.Logger.Error("error counting comments", slog.String("error", err.Error()))
+		return nil, err
+	}
+
+	return &pb.ListCommentsResponse{
+		Comments: resp,
+		Total: total,
+		Limit: req.Limit,
+		Page: req.Page,
+	}, nil
 }
 
 func (repo *TravelStoriesRepo) AddLike(req *pb.AddLikeRequest) (*pb.AddLikeResponse, error) {
@@ -287,26 +331,26 @@ func (repo *TravelStoriesRepo) AddLike(req *pb.AddLikeRequest) (*pb.AddLikeRespo
 	return &resp, nil
 }
 
-func (repo *TravelStoriesRepo) CountStories() (*int32, error) {
+func (repo *TravelStoriesRepo) CountStories() (int32, error) {
 	var total int32
 	err := repo.DB.QueryRow(`
 		SELECT 
 			COUNT(*) 
 		FROM 
 			stories
-		WHEEW 
+		WHERE
 			deleted_at = 0
 	`).Scan(&total)
 
 	if err != nil {
 		repo.Logger.Error("error counting stories", slog.String("error", err.Error()))
-		return nil, err
+		return -1, err
 	}
 
-	return &total, nil
+	return total, nil
 }
 
-func (repo *TravelStoriesRepo) CountComments(id string) (*int32, error) {
+func (repo *TravelStoriesRepo) CountComments(id string) (int32, error) {
 	var total int32
 	err := repo.DB.QueryRow(`
 		SELECT 
@@ -315,19 +359,19 @@ func (repo *TravelStoriesRepo) CountComments(id string) (*int32, error) {
 			comments c
 		JOIN 
 			stories s ON c.story_id = s.id
-		WHEEW 
-			deleted_at = 0 and c.author_id = $1
+		WHERE 
+			(deleted_at = 0) and (c.author_id = $1 or c.story_id = $1)
 	`, id).Scan(&total)
 
 	if err != nil {
 		repo.Logger.Error("error counting comments", slog.String("error", err.Error()))
-		return nil, err
+		return -1, err
 	}
 
-	return &total, nil
+	return total, nil
 }
 
-func (repo *TravelStoriesRepo) CountLikes(id string) (*int32, error) {
+func (repo *TravelStoriesRepo) CountLikes(id string) (int32, error) {
 	var total int32
 	err := repo.DB.QueryRow(`
 		SELECT 
@@ -336,14 +380,36 @@ func (repo *TravelStoriesRepo) CountLikes(id string) (*int32, error) {
 			likes l
 		JOIN 
 			stories s ON l.story_id = s.id
-		WHEEW 
-			deleted_at = 0 and l.author_id = $1
+		WHERE
+			(deleted_at = 0) and (l.author_id = $1 or l.story_id)
 	`, id).Scan(&total)
 
 	if err != nil {
 		repo.Logger.Error("error counting likes", slog.String("error", err.Error()))
-		return nil, err
+		return -1, err
 	}
 
-	return &total, nil
+	return total, nil
+}
+
+func (repo *TravelStoriesRepo) CreateStoryTags(req models.StoryTag) (error) {
+	_, err := repo.DB.Exec(`
+		INSERT INTO story_tags (
+			story_id,
+			tag
+		)
+		VALUES (
+			$1,
+			$2
+		)
+		RETURNING
+			tag
+	`, req.StoryId, req.Tag)
+
+	if err != nil {
+		repo.Logger.Error("Error in created story_tags", slog.String("error", err.Error()))
+		return err
+	}
+
+	return nil
 }

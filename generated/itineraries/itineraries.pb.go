@@ -866,17 +866,17 @@ type GetItineraryResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id            string       `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Title         string       `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
-	Description   string       `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	StartDate     string       `protobuf:"bytes,4,opt,name=start_date,json=startDate,proto3" json:"start_date,omitempty"`
-	EndDate       string       `protobuf:"bytes,5,opt,name=end_date,json=endDate,proto3" json:"end_date,omitempty"`
-	Author        *Author      `protobuf:"bytes,6,opt,name=author,proto3" json:"author,omitempty"`
-	Destinations  *Destination `protobuf:"bytes,7,opt,name=destinations,proto3" json:"destinations,omitempty"`
-	LikesCount    int32        `protobuf:"varint,8,opt,name=likes_count,json=likesCount,proto3" json:"likes_count,omitempty"`
-	CommentsCount int32        `protobuf:"varint,9,opt,name=comments_count,json=commentsCount,proto3" json:"comments_count,omitempty"`
-	CreatedAt     string       `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     string       `protobuf:"bytes,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	Id            string         `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Title         string         `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Description   string         `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	StartDate     string         `protobuf:"bytes,4,opt,name=start_date,json=startDate,proto3" json:"start_date,omitempty"`
+	EndDate       string         `protobuf:"bytes,5,opt,name=end_date,json=endDate,proto3" json:"end_date,omitempty"`
+	Author        *Author        `protobuf:"bytes,6,opt,name=author,proto3" json:"author,omitempty"`
+	Destinations  []*Destination `protobuf:"bytes,7,rep,name=destinations,proto3" json:"destinations,omitempty"`
+	LikesCount    int32          `protobuf:"varint,8,opt,name=likes_count,json=likesCount,proto3" json:"likes_count,omitempty"`
+	CommentsCount int32          `protobuf:"varint,9,opt,name=comments_count,json=commentsCount,proto3" json:"comments_count,omitempty"`
+	CreatedAt     string         `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     string         `protobuf:"bytes,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 }
 
 func (x *GetItineraryResponse) Reset() {
@@ -953,7 +953,7 @@ func (x *GetItineraryResponse) GetAuthor() *Author {
 	return nil
 }
 
-func (x *GetItineraryResponse) GetDestinations() *Destination {
+func (x *GetItineraryResponse) GetDestinations() []*Destination {
 	if x != nil {
 		return x.Destinations
 	}
@@ -1304,7 +1304,7 @@ var file_itineraries_proto_rawDesc = []byte{
 	0x2e, 0x69, 0x74, 0x69, 0x6e, 0x65, 0x72, 0x61, 0x72, 0x69, 0x65, 0x73, 0x5f, 0x73, 0x65, 0x72,
 	0x76, 0x69, 0x63, 0x65, 0x2e, 0x41, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x52, 0x06, 0x61, 0x75, 0x74,
 	0x68, 0x6f, 0x72, 0x12, 0x44, 0x0a, 0x0c, 0x64, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x61, 0x74, 0x69,
-	0x6f, 0x6e, 0x73, 0x18, 0x07, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x20, 0x2e, 0x69, 0x74, 0x69, 0x6e,
+	0x6f, 0x6e, 0x73, 0x18, 0x07, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x20, 0x2e, 0x69, 0x74, 0x69, 0x6e,
 	0x65, 0x72, 0x61, 0x72, 0x69, 0x65, 0x73, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e,
 	0x44, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x0c, 0x64, 0x65, 0x73,
 	0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x12, 0x1f, 0x0a, 0x0b, 0x6c, 0x69, 0x6b,
