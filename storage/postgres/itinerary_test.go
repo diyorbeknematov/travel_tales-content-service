@@ -24,7 +24,7 @@ func TestCreateItinerary(t *testing.T) {
 		Description: "Test Description",
 		StartDate:   time.Now().Format("2006-01-02 15:04:05"),
 		EndDate:     time.Now().Add(24 * time.Hour).Format("2006-01-02 15:04:05"),
-		AthorId:     "9b0cf2c8-308c-4896-a737-511bff1bb991",
+		AthorId:     "975799c4-bd72-43c8-b0c5-93bd9461e033",
 	}
 
 	resp, err := repo.CreateItinerary(req)

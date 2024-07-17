@@ -43,7 +43,7 @@ func (s *CommunicationService) ListMessage(ctx context.Context, in *pb.ListMessa
 
 		recipient, err := s.UserClient.UserInfo(ctx, &user.UserInfoRequest{Id: v.Recipient.Id})
 		if err != nil {
-			s.Logger.Error("Xabar jo'natuvchini ma'lumotlarini olishda xatolik", slog.String("error", err.Error()))
+			s.Logger.Error("Xabar qabul qiluvchining ma'lumotlarini olishda xatolik", slog.String("error", err.Error()))
 			return nil, err
 		}
 

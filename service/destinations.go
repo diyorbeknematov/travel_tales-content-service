@@ -17,7 +17,7 @@ type DestinationService struct {
 	pb.UnimplementedTravelDestinationServiceServer
 	DestinationRepo *postgres.DestinationRepo
 	UserClient      *user.AuthServiceClient
-	RedisClient     rdb.RedisClient
+	RedisClient     *rdb.RedisClient
 	Logger          *slog.Logger
 }
 
@@ -66,7 +66,7 @@ func (s *DestinationService) GetTravelDestination(ctx context.Context, in *pb.Ge
 	return resp, nil
 }
 
-func (s *DestinationService) GetTrendingDestinations(ctx context.Context, in *pb.GetTrendDestinationRequest) (*pb.GetTrendDestinationResponse, error) {
+func (s *DestinationService) GetTrendDestinations(ctx context.Context, in *pb.GetTrendDestinationRequest) (*pb.GetTrendDestinationResponse, error) {
 	const cacheKey = "trending_destinations"
 	// Redis cachedan olishga harakat qilamiz
 	destinationsJSON, err := s.RedisClient.R.Get(ctx, cacheKey).Bytes()
@@ -74,18 +74,20 @@ func (s *DestinationService) GetTrendingDestinations(ctx context.Context, in *pb
 		// Agar cacheda bo'lmasa, DBdan olamiz
 		destinations, err := s.DestinationRepo.GetTrendingDestinations(int(in.Limit))
 		if err != nil {
+			s.Logger.Error("xatolik top sayohat manzillarini olishda", slog.String("error", err.Error()))
 			return nil, err
 		}
 
 		// Cachega qo'shamiz
 		destinationsJSON, _ = json.Marshal(destinations)
-		s.RedisClient.R.Set(ctx, cacheKey, destinationsJSON, 1*time.Hour)
+		s.RedisClient.R.Set(ctx, cacheKey, destinationsJSON, 10*time.Minute)
 
 		return &pb.GetTrendDestinationResponse{
 			Destinations: destinations.Destinations,
 			Total:        destinations.Total,
 		}, nil
 	} else if err != nil {
+		s.Logger.Error("xatolik  top sayohat manzillarini olishda redisdan", slog.String("error", err.Error()))
 		return nil, err
 	}
 

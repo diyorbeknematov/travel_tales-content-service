@@ -29,7 +29,7 @@ type AuthServiceClient interface {
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
 	GetUserActivity(ctx context.Context, in *GetUserActivityRequest, opts ...grpc.CallOption) (*GetUserActivityResponse, error)
 	FollowUser(ctx context.Context, in *FollowUserRequest, opts ...grpc.CallOption) (*FollowUserResponse, error)
-	ListFollowers(ctx context.Context, in *ListFollowersRequest, opts ...grpc.CallOption) (*FollowUserResponse, error)
+	ListFollowers(ctx context.Context, in *ListFollowersRequest, opts ...grpc.CallOption) (*ListFollowersResponse, error)
 }
 
 type authServiceClient struct {
@@ -103,8 +103,8 @@ func (c *authServiceClient) FollowUser(ctx context.Context, in *FollowUserReques
 	return out, nil
 }
 
-func (c *authServiceClient) ListFollowers(ctx context.Context, in *ListFollowersRequest, opts ...grpc.CallOption) (*FollowUserResponse, error) {
-	out := new(FollowUserResponse)
+func (c *authServiceClient) ListFollowers(ctx context.Context, in *ListFollowersRequest, opts ...grpc.CallOption) (*ListFollowersResponse, error) {
+	out := new(ListFollowersResponse)
 	err := c.cc.Invoke(ctx, "/auth_service.AuthService/ListFollowers", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -123,7 +123,7 @@ type AuthServiceServer interface {
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
 	GetUserActivity(context.Context, *GetUserActivityRequest) (*GetUserActivityResponse, error)
 	FollowUser(context.Context, *FollowUserRequest) (*FollowUserResponse, error)
-	ListFollowers(context.Context, *ListFollowersRequest) (*FollowUserResponse, error)
+	ListFollowers(context.Context, *ListFollowersRequest) (*ListFollowersResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -152,7 +152,7 @@ func (UnimplementedAuthServiceServer) GetUserActivity(context.Context, *GetUserA
 func (UnimplementedAuthServiceServer) FollowUser(context.Context, *FollowUserRequest) (*FollowUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FollowUser not implemented")
 }
-func (UnimplementedAuthServiceServer) ListFollowers(context.Context, *ListFollowersRequest) (*FollowUserResponse, error) {
+func (UnimplementedAuthServiceServer) ListFollowers(context.Context, *ListFollowersRequest) (*ListFollowersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListFollowers not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}

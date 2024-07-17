@@ -55,3 +55,57 @@
 {"time":"2024-07-16T16:37:49.723158885+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
 {"time":"2024-07-17T06:26:32.586744576+05:00","level":"INFO","msg":"Starting the server ..."}
 {"time":"2024-07-17T06:26:32.617200148+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-17T15:27:10.414794802+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-17T15:27:10.431499434+05:00","level":"ERROR","msg":"Error connection th postgres","error":"pq: password authentication failed for user \"postgres\""}
+{"time":"2024-07-17T15:27:32.404906093+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-17T15:27:32.422818114+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-17T15:35:05.753490771+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-17T15:35:05.771378035+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-17T15:35:41.810136437+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-17T15:35:41.826788352+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-17T15:59:45.906725244+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-17T15:59:45.924733823+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-17T16:01:28.870680569+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-17T16:01:28.888350122+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-17T16:08:17.147826664+05:00","level":"ERROR","msg":"Sayohat manzili haqaida malumot olishda xatolik","error":"sql: expected 8 destination arguments in Scan, not 9"}
+{"time":"2024-07-17T16:09:46.57621865+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-17T16:09:46.604219753+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-17T16:11:26.026240397+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-17T16:11:26.043408239+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-17T16:11:57.457062961+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-17T16:11:57.474634832+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-17T16:15:26.542716024+05:00","level":"ERROR","msg":"xabar jo'natuvchini ma'lumotlarni olishda xatolik","error":"rpc error: code = Unknown desc = sql: no rows in result set"}
+{"time":"2024-07-17T16:18:14.513444356+05:00","level":"ERROR","msg":"Xatolik sayohat hikoyalarini olshida","error":"pq: syntax error at or near \"deleted_at\""}
+{"time":"2024-07-17T16:24:59.744169532+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-17T16:24:59.761474148+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-17T17:19:23.822929376+05:00","level":"ERROR","msg":"Xatolik userning sayohat qilgan davlatlar sonini olishda","error":"pq: column reference \"id\" is ambiguous"}
+{"time":"2024-07-17T17:23:55.89361133+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-17T17:23:55.91045883+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-17T17:24:08.089012247+05:00","level":"ERROR","msg":"Xatolik userning mashhur sayohat rejarlarini olishda","error":"sql: no rows in result set"}
+{"time":"2024-07-17T18:37:09.93135556+05:00","level":"ERROR","msg":"Xatolik userning mashhur sayohat rejarlarini olishda","error":"sql: no rows in result set"}
+{"time":"2024-07-17T18:37:58.567729468+05:00","level":"ERROR","msg":"Xatolik userning mashhur sayohat rejarlarini olishda","error":"sql: no rows in result set"}
+{"time":"2024-07-17T18:48:06.35150274+05:00","level":"ERROR","msg":"Sahoyat rejasini tuzgan inson malumotini olishda xatolik","error":"rpc error: code = Unknown desc = sql: no rows in result set"}
+{"time":"2024-07-17T18:49:14.981529975+05:00","level":"ERROR","msg":"xabar jo'natuvchini ma'lumotlarni olishda xatolik","error":"rpc error: code = Unknown desc = sql: no rows in result set"}
+{"time":"2024-07-17T18:52:02.469784741+05:00","level":"ERROR","msg":"xabar jo'natuvchini ma'lumotlarni olishda xatolik","error":"rpc error: code = Unknown desc = sql: no rows in result set"}
+{"time":"2024-07-17T18:58:41.182092187+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-17T18:58:41.200026913+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-17T18:58:50.269729415+05:00","level":"ERROR","msg":"xabar jo'natuvchini ma'lumotlarni olishda xatolik","error":"rpc error: code = Unknown desc = sql: no rows in result set"}
+{"time":"2024-07-17T19:02:03.041979576+05:00","level":"ERROR","msg":"xabar jo'natuvchini ma'lumotlarni olishda xatolik","error":"rpc error: code = Unknown desc = sql: no rows in result set"}
+{"time":"2024-07-17T19:14:30.095380697+05:00","level":"ERROR","msg":"xabar jo'natuvchini ma'lumotlarni olishda xatolik","error":"rpc error: code = Unknown desc = sql: no rows in result set"}
+{"time":"2024-07-17T19:20:35.795179942+05:00","level":"ERROR","msg":"xabar jo'natuvchini ma'lumotlarni olishda xatolik","error":"rpc error: code = Unknown desc = sql: no rows in result set"}
+{"time":"2024-07-17T19:27:39.055925456+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-17T19:27:39.073675764+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-17T19:29:46.408208964+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-17T19:29:46.426061987+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-17T19:30:21.128120499+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-17T19:30:21.148374767+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-17T19:30:52.491525907+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-17T19:30:52.511057967+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-17T19:32:21.533560795+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-17T19:32:21.551337942+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-17T19:32:37.224897844+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-17T19:32:37.241542467+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-17T19:39:35.595959608+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-17T19:39:35.616877446+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-17T19:42:03.336082529+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-17T19:42:03.353983174+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}

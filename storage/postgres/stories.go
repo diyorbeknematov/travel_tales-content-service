@@ -153,7 +153,7 @@ func (repo *TravelStoriesRepo) GetTravelStories(req *pb.ListTravelStoryRequest) 
 			COUNT(*) 
 		FROM 
 			stories
-		WHEEW 
+		WHERE 
 			deleted_at = 0
 	`).Scan(&total)
 

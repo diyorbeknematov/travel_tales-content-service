@@ -139,7 +139,7 @@ func (repo *DestinationRepo) GetTravelDestination(id string) (*pb.GetDestination
 			destinations
 		WHERE
 			deleted_at = 0 and id = $1
-	`, id).Scan(&resp.Id, &resp.Name, &resp.Country, &resp.Country, &resp.Description, &resp.BestTimeToVisit, &resp.AverageCostPerDay, &resp.Currency, &resp.Language)
+	`, id).Scan(&resp.Id, &resp.Name, &resp.Country, &resp.Description, &resp.BestTimeToVisit, &resp.AverageCostPerDay, &resp.Currency, &resp.Language)
 
 	if err != nil {
 		return nil, err

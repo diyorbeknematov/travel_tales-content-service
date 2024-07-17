@@ -10,6 +10,7 @@ import (
 	"content-service/logs"
 	"content-service/service"
 	"content-service/storage/postgres"
+	"content-service/storage/redis"
 	"log"
 	"log/slog"
 	"net"
@@ -58,6 +59,7 @@ func main() {
 		DestinationRepo: postgres.NewDestinationRepo(db),
 		UserClient:      &userClient,
 		Logger:          logs.Logger,
+		RedisClient:     redis.NewRedisClient(),
 	})
 
 	communication.RegisterCommunicationServiceServer(s, &service.CommunicationService{

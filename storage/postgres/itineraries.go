@@ -380,7 +380,7 @@ func (repo *ItinerariesRepo) TotalCountriesVisited(id string) (int32, error) {
 
 	err := repo.DB.QueryRow(`
 		SELECT 
-			COUNT(DISTINCT id) 
+			COUNT(DISTINCT id.id) 
 		FROM 
 			itinerary_destinations id
 		JOIN 
