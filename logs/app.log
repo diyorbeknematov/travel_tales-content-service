@@ -1,0 +1,57 @@
+{"time":"2024-07-16T12:44:44.646624622+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-16T12:44:44.657737552+05:00","level":"ERROR","msg":"Error create to new listener","error":"listen tcp: address 50051: missing port in address"}
+{"time":"2024-07-16T12:45:35.385952678+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-16T12:45:35.398039883+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-16T13:44:59.990428083+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-16T13:45:00.003127503+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-16T14:45:38.98926866+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-16T14:45:39.008713187+05:00","level":"ERROR","msg":"Error create to new listener","error":"listen tcp :50051: bind: address already in use"}
+{"time":"2024-07-16T14:45:50.930972647+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-16T14:45:50.949309411+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-16T15:11:33.041395984+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-16T15:11:33.049043948+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-16T15:15:23.798430981+05:00","level":"ERROR","msg":"hikoya haqida to'liq ma'lumot olishda xatolik","error":"pq: column \"uptadet_at\" does not exist"}
+{"time":"2024-07-16T15:17:15.338208108+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-16T15:17:15.345629384+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-16T15:17:19.144138441+05:00","level":"ERROR","msg":"hikoya haqida to'liq ma'lumot olishda xatolik","error":"pq: column \"uptated_at\" does not exist"}
+{"time":"2024-07-16T15:17:38.982042776+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-16T15:17:38.990403358+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-16T15:17:42.821864382+05:00","level":"ERROR","msg":"Xatolik hikoyaning authorni olishda","error":"failed to exit idle mode: dns resolver: missing port after port-separator colon"}
+{"time":"2024-07-16T15:31:06.738573421+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-16T15:31:06.74653616+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-16T15:33:13.624608084+05:00","level":"ERROR","msg":"Xatolik sayohat hikoyalarini olshida","error":"pq: operator does not exist: & integer"}
+{"time":"2024-07-16T15:34:52.222868536+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-16T15:34:52.230765866+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-16T15:34:56.242875039+05:00","level":"ERROR","msg":"Xatolik sayohat hikoyalarini olshida","error":"pq: syntax error at or near \"deleted_at\""}
+{"time":"2024-07-16T15:38:49.133408653+05:00","level":"ERROR","msg":"Xatolik hikoyalarga yozilgan izohlarni olishda","error":"pq: column reference \"id\" is ambiguous"}
+{"time":"2024-07-16T15:43:50.886284792+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-16T15:43:50.893999529+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-16T15:44:01.614641963+05:00","level":"ERROR","msg":"Xatolik hikoyalarga yozilgan izohlarni olishda","error":"pq: relation \"authors\" does not exist"}
+{"time":"2024-07-16T15:45:58.442084279+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-16T15:45:58.449581867+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-16T15:46:03.380151277+05:00","level":"ERROR","msg":"Xatolik hikoyalarga yozilgan izohlarni olishda","error":"pq: syntax error at or near \"FROM\""}
+{"time":"2024-07-16T15:47:38.581222991+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-16T15:47:38.589879392+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-16T16:02:55.620568569+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-16T16:02:55.628810587+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-16T16:13:45.963072278+05:00","level":"ERROR","msg":"sayohat rejasini tuzishda xatolik","error":"pq: column \"athor_id\" of relation \"itineraries\" does not exist"}
+{"time":"2024-07-16T16:15:50.148183613+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-16T16:15:50.155902207+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-16T16:16:26.341142369+05:00","level":"ERROR","msg":"Sahoyat rejasini tuzgan inson malumotini olishda xatolik","error":"rpc error: code = Unknown desc = sql: no rows in result set"}
+{"time":"2024-07-16T16:20:23.131721684+05:00","level":"ERROR","msg":"sayohat rejasi haqida to'liq ma'lumot olishda xatolik","error":"pq: syntax error at or near \"id\""}
+{"time":"2024-07-16T16:22:36.755570907+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-16T16:22:36.763109843+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-16T16:22:45.269649794+05:00","level":"ERROR","msg":"sahoyat rejasini tuzgan user haqida malumot olishda xatolik","error":"rpc error: code = Unknown desc = sql: no rows in result set"}
+{"time":"2024-07-16T16:24:16.488478078+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-16T16:24:16.502049007+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-16T16:24:29.765488158+05:00","level":"ERROR","msg":"sahoyat rejasini tuzgan user haqida malumot olishda xatolik","error":"rpc error: code = Unknown desc = sql: no rows in result set"}
+{"time":"2024-07-16T16:26:53.723801423+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-16T16:26:53.736361813+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-16T16:26:59.864730092+05:00","level":"ERROR","msg":"sahoyat rejasini tuzgan user haqida malumot olishda xatolik","error":"rpc error: code = Unknown desc = sql: no rows in result set"}
+{"time":"2024-07-16T16:28:35.708722825+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-16T16:28:35.72140546+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-16T16:29:42.914634141+05:00","level":"ERROR","msg":"Sayohat rejasini yangilashda xatolik","error":"pq: syntax error at or near \",\""}
+{"time":"2024-07-16T16:37:49.712455496+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-16T16:37:49.723158885+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}
+{"time":"2024-07-17T06:26:32.586744576+05:00","level":"INFO","msg":"Starting the server ..."}
+{"time":"2024-07-17T06:26:32.617200148+05:00","level":"INFO","msg":"server is running ","PORT":":50051"}

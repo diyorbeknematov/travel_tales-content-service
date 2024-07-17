@@ -4,18 +4,15 @@ import (
 	pb "content-service/generated/communication"
 	"database/sql"
 	"fmt"
-	"log/slog"
 )
 
 type CommenicationRepo struct {
-	DB     *sql.DB
-	Logger *slog.Logger
+	DB *sql.DB
 }
 
-func NewCommunicationRepo(db *sql.DB, logger *slog.Logger) *CommenicationRepo {
+func NewCommunicationRepo(db *sql.DB) *CommenicationRepo {
 	return &CommenicationRepo{
-		DB:     db,
-		Logger: logger,
+		DB: db,
 	}
 }
 
@@ -42,7 +39,6 @@ func (repo *CommenicationRepo) SendMessage(req *pb.SendMessageRequest) (*pb.Send
 	`, req.SendeId, req.RecipientId, req.Content).Scan(&resp.Id, &resp.SenderId, &resp.RecipientId, &resp.Content, &resp.CreatedAt)
 
 	if err != nil {
-		repo.Logger.Error("Error in send message", slog.String("error", err.Error()))
 		return nil, err
 	}
 
@@ -67,7 +63,6 @@ func (repo *CommenicationRepo) GetMessages(req *pb.ListMessageRequest) (*pb.List
 	`, offset, req.Limit)
 
 	if err != nil {
-		repo.Logger.Error("Error in get all messages", slog.String("error", err.Error()))
 		return nil, err
 	}
 
@@ -78,7 +73,6 @@ func (repo *CommenicationRepo) GetMessages(req *pb.ListMessageRequest) (*pb.List
 
 		err = rows.Scan(&message.Id, &sender.Id, &recipient.Id, &message.Content, &message.CreatedAt)
 		if err != nil {
-			repo.Logger.Error("Error in scan message", slog.String("error", err.Error()))
 			return nil, err
 		}
 		message.Sender = &sender
@@ -97,19 +91,17 @@ func (repo *CommenicationRepo) GetMessages(req *pb.ListMessageRequest) (*pb.List
 			COUNT(*) 
 		FROM 
 			messages
-	`, ).Scan(&total)
+	`).Scan(&total)
 
 	if err != nil {
-		repo.Logger.Error("error counting messages", slog.String("error", err.Error()))
 		return nil, err
 	}
 
-
 	return &pb.ListMessageResponse{
 		Message: resp,
-		Limit: req.Limit,
-		Page: req.Page,
-		Total: total,
+		Limit:   req.Limit,
+		Page:    req.Page,
+		Total:   total,
 	}, nil
 }
 
@@ -134,13 +126,12 @@ func (repo *CommenicationRepo) CreateTravelTips(req *pb.AddTravelTipsRequest) (*
 			title,
 			content,
 			category,
-			athor_id,
+			author_id,
 			created_at
 	`, req.Title, req.Content, req.Category, req.AuthorId).
-	Scan(&resp.Id, &resp.Title, resp.Content, &resp.Category, &resp.AuthorId, &resp.CreatedAt)
+		Scan(&resp.Id, &resp.Title, &resp.Content, &resp.Category, &resp.AuthorId, &resp.CreatedAt)
 
 	if err != nil {
-		repo.Logger.Error("Error in add travel tips", slog.String("error", err.Error()))
 		return nil, err
 	}
 	return &resp, nil
@@ -157,31 +148,30 @@ func (repo *CommenicationRepo) GetTravelTips(req *pb.GetTravelTipsRequest) (*pb.
 			category,
 			author_id,
 			created_at
+		FROM 
+			travel_tips
 		WHERE
 			true `
 	ind := 1
 
 	if req.Catygory != "" {
-		query += fmt.Sprintf(" AND catygory = $%d", ind)
+		query += fmt.Sprintf(" AND category = $%d", ind)
 		ind++
 		args = append(args, req.Catygory)
-	} 
-		query += fmt.Sprintf(" OFFSET $%d LIMIT $%d", ind, ind+1)
-		args = append(args, offset, req.Limit)
-	
+	}
+	query += fmt.Sprintf(" OFFSET $%d LIMIT $%d", ind, ind+1)
+	args = append(args, offset, req.Limit)
 
 	rows, err := repo.DB.Query(query, args...)
 	if err != nil {
-		repo.Logger.Error("Error in get all travels", slog.String("error", err.Error()))
 		return nil, err
 	}
 
 	for rows.Next() {
-		var tip pb.Tip 
+		var tip pb.Tip
 		var author pb.Author
 		err = rows.Scan(&tip.Id, &tip.Title, &tip.Category, &author.Id, &tip.CreatedAt)
 		if err != nil {
-			repo.Logger.Error("Error in add get all tips", slog.String("error", err.Error()))
 			return nil, err
 		}
 
@@ -203,14 +193,13 @@ func (repo *CommenicationRepo) GetTravelTips(req *pb.GetTravelTipsRequest) (*pb.
 	`).Scan(&total)
 
 	if err != nil {
-		repo.Logger.Error("error counting travel_tips", slog.String("error", err.Error()))
 		return nil, err
 	}
 
 	return &pb.GetTravelTipsResponse{
-		Tips: resp,
+		Tips:  resp,
 		Limit: req.Limit,
-		Page: req.Page,
+		Page:  req.Page,
 		Total: total,
 	}, nil
 }
@@ -222,10 +211,9 @@ func (repo *CommenicationRepo) CountMessages() (*int32, error) {
 			COUNT(*) 
 		FROM 
 			messages 
-	`, ).Scan(&total)
+	`).Scan(&total)
 
 	if err != nil {
-		repo.Logger.Error("error counting messages", slog.String("error", err.Error()))
 		return nil, err
 	}
 

@@ -11,8 +11,8 @@ import (
 
 type ItineraryService struct {
 	pb.UnimplementedItinerariesServiceServer
-	ItineraryRepo postgres.ItinerariesRepo
-	Storyrepo     postgres.TravelStoriesRepo
+	ItineraryRepo *postgres.ItinerariesRepo
+	Storyrepo     *postgres.TravelStoriesRepo
 	UserClient    user.AuthServiceClient
 	Logger        *slog.Logger
 }

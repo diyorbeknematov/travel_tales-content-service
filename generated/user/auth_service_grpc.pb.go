@@ -27,7 +27,7 @@ type AuthServiceClient interface {
 	UpdateUserProfile(ctx context.Context, in *UpdateProfileRequest, opts ...grpc.CallOption) (*UpdateProfileResponse, error)
 	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
-	GetUserActivity(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*GetUserActivityResponse, error)
+	GetUserActivity(ctx context.Context, in *GetUserActivityRequest, opts ...grpc.CallOption) (*GetUserActivityResponse, error)
 	FollowUser(ctx context.Context, in *FollowUserRequest, opts ...grpc.CallOption) (*FollowUserResponse, error)
 	ListFollowers(ctx context.Context, in *ListFollowersRequest, opts ...grpc.CallOption) (*FollowUserResponse, error)
 }
@@ -85,7 +85,7 @@ func (c *authServiceClient) DeleteUser(ctx context.Context, in *DeleteUserReques
 	return out, nil
 }
 
-func (c *authServiceClient) GetUserActivity(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*GetUserActivityResponse, error) {
+func (c *authServiceClient) GetUserActivity(ctx context.Context, in *GetUserActivityRequest, opts ...grpc.CallOption) (*GetUserActivityResponse, error) {
 	out := new(GetUserActivityResponse)
 	err := c.cc.Invoke(ctx, "/auth_service.AuthService/GetUserActivity", in, out, opts...)
 	if err != nil {
@@ -121,7 +121,7 @@ type AuthServiceServer interface {
 	UpdateUserProfile(context.Context, *UpdateProfileRequest) (*UpdateProfileResponse, error)
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
-	GetUserActivity(context.Context, *GetProfileRequest) (*GetUserActivityResponse, error)
+	GetUserActivity(context.Context, *GetUserActivityRequest) (*GetUserActivityResponse, error)
 	FollowUser(context.Context, *FollowUserRequest) (*FollowUserResponse, error)
 	ListFollowers(context.Context, *ListFollowersRequest) (*FollowUserResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
@@ -146,7 +146,7 @@ func (UnimplementedAuthServiceServer) ListUsers(context.Context, *ListUsersReque
 func (UnimplementedAuthServiceServer) DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
 }
-func (UnimplementedAuthServiceServer) GetUserActivity(context.Context, *GetProfileRequest) (*GetUserActivityResponse, error) {
+func (UnimplementedAuthServiceServer) GetUserActivity(context.Context, *GetUserActivityRequest) (*GetUserActivityResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserActivity not implemented")
 }
 func (UnimplementedAuthServiceServer) FollowUser(context.Context, *FollowUserRequest) (*FollowUserResponse, error) {
@@ -259,7 +259,7 @@ func _AuthService_DeleteUser_Handler(srv interface{}, ctx context.Context, dec f
 }
 
 func _AuthService_GetUserActivity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetProfileRequest)
+	in := new(GetUserActivityRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -271,7 +271,7 @@ func _AuthService_GetUserActivity_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: "/auth_service.AuthService/GetUserActivity",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).GetUserActivity(ctx, req.(*GetProfileRequest))
+		return srv.(AuthServiceServer).GetUserActivity(ctx, req.(*GetUserActivityRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

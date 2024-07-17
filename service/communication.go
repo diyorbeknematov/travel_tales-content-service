@@ -9,6 +9,7 @@ import (
 )
 
 type CommunicationService struct {
+	pb.UnimplementedCommunicationServiceServer
 	CommunicationRepo *postgres.CommenicationRepo
 	StoryRepo 		  *postgres.TravelStoriesRepo
 	ItineraryRepo 	  *postgres.ItinerariesRepo

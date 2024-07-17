@@ -6,18 +6,15 @@ import (
 	"content-service/models"
 	"database/sql"
 	"errors"
-	"log/slog"
 )
 
 type ItinerariesRepo struct {
-	DB     *sql.DB
-	Logger *slog.Logger
+	DB *sql.DB
 }
 
-func NewItinerariesRepo(db *sql.DB, logger *slog.Logger) *ItinerariesRepo {
+func NewItinerariesRepo(db *sql.DB) *ItinerariesRepo {
 	return &ItinerariesRepo{
-		DB:     db,
-		Logger: logger,
+		DB: db,
 	}
 }
 
@@ -30,7 +27,7 @@ func (repo *ItinerariesRepo) CreateItinerary(req *pb.CreateItineraryRequest) (*p
 			description,
 			start_date,
 			end_date,
-			athor_id
+			author_id
 		)
 		VALUES (
 			$1,
@@ -51,7 +48,6 @@ func (repo *ItinerariesRepo) CreateItinerary(req *pb.CreateItineraryRequest) (*p
 		Scan(&resp.Id, &resp.Title, &resp.Description, &resp.StartDate, &resp.EndDate, &resp.AuthorId, &resp.CreatedAt)
 
 	if err != nil {
-		repo.Logger.Error("Error in created itineraries", slog.String("error", err.Error()))
 		return nil, err
 	}
 
@@ -65,10 +61,10 @@ func (repo *ItinerariesRepo) UpdateItinerary(req *pb.UpdateItineraryRequest) (*p
 		UPDATE 
 			itineraries
 		SET
-			title,
-			description 
+			title = $1,
+			description = $2
 		WHERE
-			id = $1 and deleted_at = 0
+			id = $3 and deleted_at = 0
 		RETURNING
 			id,
 			title,
@@ -80,7 +76,6 @@ func (repo *ItinerariesRepo) UpdateItinerary(req *pb.UpdateItineraryRequest) (*p
 	`, req.Title, req.Description, req.Id).Scan(&resp.Id, &resp.Title, &resp.Description, &resp.StartDate, &resp.EndDate, &resp.AuthorId, &resp.UpdatedAt)
 
 	if err != nil {
-		repo.Logger.Error("Error in updated itinerary", slog.String("error", err.Error()))
 		return nil, err
 	}
 
@@ -95,19 +90,16 @@ func (repo *ItinerariesRepo) DeleteItinerary(id string) (*pb.DeleteItineraryResp
 	`, id)
 
 	if err != nil {
-		repo.Logger.Error("Error in deleting itinerary", slog.String("error", err.Error()))
 		return nil, err
 	}
 
 	// Nechta qator o'chirilganini tekshirish
 	rowsAffected, err := res.RowsAffected()
 	if err != nil {
-		repo.Logger.Error("Error in getting rows affected", slog.String("error", err.Error()))
 		return nil, err
 	}
 
 	if rowsAffected == 0 {
-		repo.Logger.Error("Itinerary not found or already deleted")
 		return &pb.DeleteItineraryResponse{
 			Message: "Itinerary not found or already deleted",
 		}, errors.New("itinerary not found or already deleted")
@@ -134,11 +126,10 @@ func (repo *ItinerariesRepo) GetItinerary(id string) (*pb.GetItineraryResponse, 
 		FROM
 			itineraries
 		WHERE
-			deleted_at = 0 id = $1
-	`, id).Scan(&resp.Id, &resp.Title, &resp.Description, &resp.StartDate, &resp.EndDate, &author.Id, resp.CreatedAt, &resp.UpdatedAt)
+			deleted_at = 0 AND id = $1
+	`, id).Scan(&resp.Id, &resp.Title, &resp.Description, &resp.StartDate, &resp.EndDate, &author.Id, &resp.CreatedAt, &resp.UpdatedAt)
 
 	if err != nil {
-		repo.Logger.Error("Error in get itinerary", slog.String("error", err.Error()))
 		return nil, err
 	}
 	resp.Author = &author
@@ -166,7 +157,6 @@ func (repo *ItinerariesRepo) ListItineraries(req *pb.ListItinerariesRequest) (*p
 	`, offset, req.Limit)
 
 	if err != nil {
-		repo.Logger.Error("Error in get all itineraries", slog.String("error", err.Error()))
 		return nil, err
 	}
 
@@ -177,7 +167,6 @@ func (repo *ItinerariesRepo) ListItineraries(req *pb.ListItinerariesRequest) (*p
 		err = rows.Scan(&itinerary.Id, &itinerary.Title, &author.Id, &itinerary.StartDate, &itinerary.EndDate, &itinerary.CreatedAt)
 
 		if err != nil {
-			repo.Logger.Error("Error in scan itinerary", slog.String("error", err.Error()))
 			return nil, err
 		}
 		itinerary.Author = &author
@@ -200,7 +189,6 @@ func (repo *ItinerariesRepo) ListItineraries(req *pb.ListItinerariesRequest) (*p
 	`).Scan(&total)
 
 	if err != nil {
-		repo.Logger.Error("error counting itinerary", slog.String("error", err.Error()))
 		return nil, err
 	}
 
@@ -229,7 +217,6 @@ func (repo *ItinerariesRepo) CreateItineraryDestinations(req models.ItineraryDes
 	`, req.ItineraryId, req.Name, req.StartDate, req.EndDate)
 
 	if err != nil {
-		repo.Logger.Error("Error in create itinerary_destinations", slog.String("error", err.Error()))
 		return err
 	}
 
@@ -249,7 +236,6 @@ func (repo *ItinerariesRepo) CreateItineraryActivity(req models.ItineraryActivit
 	`, req.DestinationId, req.Activity)
 
 	if err != nil {
-		repo.Logger.Error("Error in created itinerary_activities", slog.String("error", err.Error()))
 		return err
 	}
 
@@ -257,10 +243,10 @@ func (repo *ItinerariesRepo) CreateItineraryActivity(req models.ItineraryActivit
 }
 
 func (repo *ItinerariesRepo) GetItineraryDestinations(id string) ([]models.Result, error) {
-	var	destinations  []models.Result
+	var destinations []models.Result
 	rows, err := repo.DB.Query(`
 		SELECT
-			id
+			id,
 			name,
 			start_date,
 			end_date
@@ -279,7 +265,7 @@ func (repo *ItinerariesRepo) GetItineraryDestinations(id string) ([]models.Resul
 	for rows.Next() {
 		var res models.Result
 
-		err = rows.Scan(res.ID, &res.Name, &res.StartDate, &res.EndDate,)
+		err = rows.Scan(res.ID, &res.Name, &res.StartDate, &res.EndDate)
 		if err != nil {
 			return nil, err
 		}
@@ -334,8 +320,8 @@ func (repo *ItinerariesRepo) CreateItineraryComments(req *pb.LeaveCommentRequest
 	err := repo.DB.QueryRow(`
 		INSERT INTO itinerary_comments (
 			author_id,
-			itinerary_id
-			content,
+			itinerary_id,
+			content
 		)
 		VALUES (
 			$1,
@@ -361,11 +347,10 @@ func (repo *ItinerariesRepo) CountItinerary(id string) (int32, error) {
 		FROM 
 			itineraries
 		WHERE
-			(deleted_at = 0) AND (user_id = $1 or id = $2) 
-	`).Scan(&total)
+			(deleted_at = 0) AND (author_id = $1 or id = $1) 
+	`, id).Scan(&total)
 
 	if err != nil {
-		repo.Logger.Error("error counting stories", slog.String("error", err.Error()))
 		return -1, err
 	}
 
@@ -380,11 +365,10 @@ func (repo *ItinerariesRepo) CountItineraryComments(id string) (int32, error) {
 		FROM 
 			itineraries
 		WHERE
-			(deleted_at = 0) AND (user_id = $1 or id = $2) 
-	`).Scan(&total)
+			(deleted_at = 0) AND (author_id = $1 or id = $1) 
+	`, id).Scan(&total)
 
 	if err != nil {
-		repo.Logger.Error("error counting stories", slog.String("error", err.Error()))
 		return -1, err
 	}
 
@@ -396,7 +380,7 @@ func (repo *ItinerariesRepo) TotalCountriesVisited(id string) (int32, error) {
 
 	err := repo.DB.QueryRow(`
 		SELECT 
-			COUNT(DISTINCT destination_id) 
+			COUNT(DISTINCT id) 
 		FROM 
 			itinerary_destinations id
 		JOIN 
@@ -424,6 +408,6 @@ func (repo *ItinerariesRepo) MostPopularItinerary(id string) (*communication.Mos
 			likes_count DESC 
 		LIMIT 1;
 	`, id).Scan(&resp.Id, &resp.Title, &resp.LikesCount)
-	
+
 	return &resp, err
 }

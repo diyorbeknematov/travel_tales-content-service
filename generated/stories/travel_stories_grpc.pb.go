@@ -30,6 +30,9 @@ type TravelStoriesServiceClient interface {
 	AddCommment(ctx context.Context, in *AddCommentRequest, opts ...grpc.CallOption) (*AddCommentResponse, error)
 	ListComments(ctx context.Context, in *ListCommentsRequest, opts ...grpc.CallOption) (*ListCommentsResponse, error)
 	AddLike(ctx context.Context, in *AddLikeRequest, opts ...grpc.CallOption) (*AddLikeResponse, error)
+	CountStories(ctx context.Context, in *CountStoriesRequest, opts ...grpc.CallOption) (*CountStoriesResponse, error)
+	CountLikes(ctx context.Context, in *CountLikesRequest, opts ...grpc.CallOption) (*CountLikesResponse, error)
+	CountComments(ctx context.Context, in *CountCommentsRequest, opts ...grpc.CallOption) (*CountCommentsResponse, error)
 }
 
 type travelStoriesServiceClient struct {
@@ -112,6 +115,33 @@ func (c *travelStoriesServiceClient) AddLike(ctx context.Context, in *AddLikeReq
 	return out, nil
 }
 
+func (c *travelStoriesServiceClient) CountStories(ctx context.Context, in *CountStoriesRequest, opts ...grpc.CallOption) (*CountStoriesResponse, error) {
+	out := new(CountStoriesResponse)
+	err := c.cc.Invoke(ctx, "/travel_stories.TravelStoriesService/CountStories", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *travelStoriesServiceClient) CountLikes(ctx context.Context, in *CountLikesRequest, opts ...grpc.CallOption) (*CountLikesResponse, error) {
+	out := new(CountLikesResponse)
+	err := c.cc.Invoke(ctx, "/travel_stories.TravelStoriesService/CountLikes", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *travelStoriesServiceClient) CountComments(ctx context.Context, in *CountCommentsRequest, opts ...grpc.CallOption) (*CountCommentsResponse, error) {
+	out := new(CountCommentsResponse)
+	err := c.cc.Invoke(ctx, "/travel_stories.TravelStoriesService/CountComments", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TravelStoriesServiceServer is the server API for TravelStoriesService service.
 // All implementations must embed UnimplementedTravelStoriesServiceServer
 // for forward compatibility
@@ -124,6 +154,9 @@ type TravelStoriesServiceServer interface {
 	AddCommment(context.Context, *AddCommentRequest) (*AddCommentResponse, error)
 	ListComments(context.Context, *ListCommentsRequest) (*ListCommentsResponse, error)
 	AddLike(context.Context, *AddLikeRequest) (*AddLikeResponse, error)
+	CountStories(context.Context, *CountStoriesRequest) (*CountStoriesResponse, error)
+	CountLikes(context.Context, *CountLikesRequest) (*CountLikesResponse, error)
+	CountComments(context.Context, *CountCommentsRequest) (*CountCommentsResponse, error)
 	mustEmbedUnimplementedTravelStoriesServiceServer()
 }
 
@@ -154,6 +187,15 @@ func (UnimplementedTravelStoriesServiceServer) ListComments(context.Context, *Li
 }
 func (UnimplementedTravelStoriesServiceServer) AddLike(context.Context, *AddLikeRequest) (*AddLikeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddLike not implemented")
+}
+func (UnimplementedTravelStoriesServiceServer) CountStories(context.Context, *CountStoriesRequest) (*CountStoriesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CountStories not implemented")
+}
+func (UnimplementedTravelStoriesServiceServer) CountLikes(context.Context, *CountLikesRequest) (*CountLikesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CountLikes not implemented")
+}
+func (UnimplementedTravelStoriesServiceServer) CountComments(context.Context, *CountCommentsRequest) (*CountCommentsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CountComments not implemented")
 }
 func (UnimplementedTravelStoriesServiceServer) mustEmbedUnimplementedTravelStoriesServiceServer() {}
 
@@ -312,6 +354,60 @@ func _TravelStoriesService_AddLike_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TravelStoriesService_CountStories_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CountStoriesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TravelStoriesServiceServer).CountStories(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/travel_stories.TravelStoriesService/CountStories",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TravelStoriesServiceServer).CountStories(ctx, req.(*CountStoriesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TravelStoriesService_CountLikes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CountLikesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TravelStoriesServiceServer).CountLikes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/travel_stories.TravelStoriesService/CountLikes",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TravelStoriesServiceServer).CountLikes(ctx, req.(*CountLikesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TravelStoriesService_CountComments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CountCommentsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TravelStoriesServiceServer).CountComments(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/travel_stories.TravelStoriesService/CountComments",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TravelStoriesServiceServer).CountComments(ctx, req.(*CountCommentsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // TravelStoriesService_ServiceDesc is the grpc.ServiceDesc for TravelStoriesService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -350,6 +446,18 @@ var TravelStoriesService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddLike",
 			Handler:    _TravelStoriesService_AddLike_Handler,
+		},
+		{
+			MethodName: "CountStories",
+			Handler:    _TravelStoriesService_CountStories_Handler,
+		},
+		{
+			MethodName: "CountLikes",
+			Handler:    _TravelStoriesService_CountLikes_Handler,
+		},
+		{
+			MethodName: "CountComments",
+			Handler:    _TravelStoriesService_CountComments_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -11,7 +11,7 @@ import (
 
 type TravelStoriesService struct {
 	pb.UnimplementedTravelStoriesServiceServer
-	StoriyRepo postgres.TravelStoriesRepo
+	StoriyRepo *postgres.TravelStoriesRepo
 	UserClient user.AuthServiceClient
 	Logger     *slog.Logger
 }
@@ -140,4 +140,40 @@ func (s *TravelStoriesService) AddLike(ctx context.Context, in *pb.AddLikeReques
 		return nil, err
 	}
 	return resp, nil
+}
+
+func (s *TravelStoriesService) CountComments(ctx context.Context, in *pb.CountCommentsRequest) (*pb.CountCommentsResponse, error) {
+	resp, err := s.StoriyRepo.CountComments(in.UserId)
+	if err != nil {
+		s.Logger.Error("xatolik hikoyalarga yozilgan commentlar sonini olishda", slog.String("error", err.Error()))
+		return nil, err
+	}
+
+	return &pb.CountCommentsResponse{
+		CountComments: int32(resp),
+	}, nil
+}
+
+func (s *TravelStoriesService) CountLikes(ctx context.Context, in *pb.CountLikesRequest) (*pb.CountLikesResponse, error) {
+	resp, err := s.StoriyRepo.CountLikes(in.UserId)
+	if err != nil {
+		s.Logger.Error("xatolik hikoyalarga bosilgan likelar sonini olishda", slog.String("error", err.Error()))
+		return nil, err
+	}
+
+	return &pb.CountLikesResponse{
+		CountLikes: int32(resp),
+	}, nil
+}
+
+func (s *TravelStoriesService) CountStories(ctx context.Context, in *pb.CountStoriesRequest) (*pb.CountStoriesResponse, error) {
+	resp, err := s.StoriyRepo.CountComments(in.UserId)
+	if err != nil {
+		s.Logger.Error("xatolik hikoyalarga yozilgan commentlar sonini olishda", slog.String("error", err.Error()))
+		return nil, err
+	}
+
+	return &pb.CountStoriesResponse{
+		CountStories: int32(resp),
+	}, nil
 }

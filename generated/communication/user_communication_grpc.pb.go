@@ -18,10 +18,10 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// MessageServiceClient is the client API for MessageService service.
+// CommunicationServiceClient is the client API for CommunicationService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type MessageServiceClient interface {
+type CommunicationServiceClient interface {
 	SendMessageUser(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error)
 	ListMessage(ctx context.Context, in *ListMessageRequest, opts ...grpc.CallOption) (*ListMessageResponse, error)
 	AddTravelTips(ctx context.Context, in *AddTravelTipsRequest, opts ...grpc.CallOption) (*AddTravelTipsResponse, error)
@@ -29,219 +29,219 @@ type MessageServiceClient interface {
 	GetUserStatics(ctx context.Context, in *GetUserStaticsRequest, opts ...grpc.CallOption) (*GetUserStaticsResponse, error)
 }
 
-type messageServiceClient struct {
+type communicationServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewMessageServiceClient(cc grpc.ClientConnInterface) MessageServiceClient {
-	return &messageServiceClient{cc}
+func NewCommunicationServiceClient(cc grpc.ClientConnInterface) CommunicationServiceClient {
+	return &communicationServiceClient{cc}
 }
 
-func (c *messageServiceClient) SendMessageUser(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error) {
+func (c *communicationServiceClient) SendMessageUser(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error) {
 	out := new(SendMessageResponse)
-	err := c.cc.Invoke(ctx, "/user_communication.MessageService/SendMessageUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/user_communication.CommunicationService/SendMessageUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *messageServiceClient) ListMessage(ctx context.Context, in *ListMessageRequest, opts ...grpc.CallOption) (*ListMessageResponse, error) {
+func (c *communicationServiceClient) ListMessage(ctx context.Context, in *ListMessageRequest, opts ...grpc.CallOption) (*ListMessageResponse, error) {
 	out := new(ListMessageResponse)
-	err := c.cc.Invoke(ctx, "/user_communication.MessageService/ListMessage", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/user_communication.CommunicationService/ListMessage", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *messageServiceClient) AddTravelTips(ctx context.Context, in *AddTravelTipsRequest, opts ...grpc.CallOption) (*AddTravelTipsResponse, error) {
+func (c *communicationServiceClient) AddTravelTips(ctx context.Context, in *AddTravelTipsRequest, opts ...grpc.CallOption) (*AddTravelTipsResponse, error) {
 	out := new(AddTravelTipsResponse)
-	err := c.cc.Invoke(ctx, "/user_communication.MessageService/AddTravelTips", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/user_communication.CommunicationService/AddTravelTips", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *messageServiceClient) GetTravelTips(ctx context.Context, in *GetTravelTipsRequest, opts ...grpc.CallOption) (*GetTravelTipsResponse, error) {
+func (c *communicationServiceClient) GetTravelTips(ctx context.Context, in *GetTravelTipsRequest, opts ...grpc.CallOption) (*GetTravelTipsResponse, error) {
 	out := new(GetTravelTipsResponse)
-	err := c.cc.Invoke(ctx, "/user_communication.MessageService/GetTravelTips", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/user_communication.CommunicationService/GetTravelTips", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *messageServiceClient) GetUserStatics(ctx context.Context, in *GetUserStaticsRequest, opts ...grpc.CallOption) (*GetUserStaticsResponse, error) {
+func (c *communicationServiceClient) GetUserStatics(ctx context.Context, in *GetUserStaticsRequest, opts ...grpc.CallOption) (*GetUserStaticsResponse, error) {
 	out := new(GetUserStaticsResponse)
-	err := c.cc.Invoke(ctx, "/user_communication.MessageService/GetUserStatics", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/user_communication.CommunicationService/GetUserStatics", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// MessageServiceServer is the server API for MessageService service.
-// All implementations must embed UnimplementedMessageServiceServer
+// CommunicationServiceServer is the server API for CommunicationService service.
+// All implementations must embed UnimplementedCommunicationServiceServer
 // for forward compatibility
-type MessageServiceServer interface {
+type CommunicationServiceServer interface {
 	SendMessageUser(context.Context, *SendMessageRequest) (*SendMessageResponse, error)
 	ListMessage(context.Context, *ListMessageRequest) (*ListMessageResponse, error)
 	AddTravelTips(context.Context, *AddTravelTipsRequest) (*AddTravelTipsResponse, error)
 	GetTravelTips(context.Context, *GetTravelTipsRequest) (*GetTravelTipsResponse, error)
 	GetUserStatics(context.Context, *GetUserStaticsRequest) (*GetUserStaticsResponse, error)
-	mustEmbedUnimplementedMessageServiceServer()
+	mustEmbedUnimplementedCommunicationServiceServer()
 }
 
-// UnimplementedMessageServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedMessageServiceServer struct {
+// UnimplementedCommunicationServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedCommunicationServiceServer struct {
 }
 
-func (UnimplementedMessageServiceServer) SendMessageUser(context.Context, *SendMessageRequest) (*SendMessageResponse, error) {
+func (UnimplementedCommunicationServiceServer) SendMessageUser(context.Context, *SendMessageRequest) (*SendMessageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendMessageUser not implemented")
 }
-func (UnimplementedMessageServiceServer) ListMessage(context.Context, *ListMessageRequest) (*ListMessageResponse, error) {
+func (UnimplementedCommunicationServiceServer) ListMessage(context.Context, *ListMessageRequest) (*ListMessageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMessage not implemented")
 }
-func (UnimplementedMessageServiceServer) AddTravelTips(context.Context, *AddTravelTipsRequest) (*AddTravelTipsResponse, error) {
+func (UnimplementedCommunicationServiceServer) AddTravelTips(context.Context, *AddTravelTipsRequest) (*AddTravelTipsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddTravelTips not implemented")
 }
-func (UnimplementedMessageServiceServer) GetTravelTips(context.Context, *GetTravelTipsRequest) (*GetTravelTipsResponse, error) {
+func (UnimplementedCommunicationServiceServer) GetTravelTips(context.Context, *GetTravelTipsRequest) (*GetTravelTipsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTravelTips not implemented")
 }
-func (UnimplementedMessageServiceServer) GetUserStatics(context.Context, *GetUserStaticsRequest) (*GetUserStaticsResponse, error) {
+func (UnimplementedCommunicationServiceServer) GetUserStatics(context.Context, *GetUserStaticsRequest) (*GetUserStaticsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserStatics not implemented")
 }
-func (UnimplementedMessageServiceServer) mustEmbedUnimplementedMessageServiceServer() {}
+func (UnimplementedCommunicationServiceServer) mustEmbedUnimplementedCommunicationServiceServer() {}
 
-// UnsafeMessageServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to MessageServiceServer will
+// UnsafeCommunicationServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to CommunicationServiceServer will
 // result in compilation errors.
-type UnsafeMessageServiceServer interface {
-	mustEmbedUnimplementedMessageServiceServer()
+type UnsafeCommunicationServiceServer interface {
+	mustEmbedUnimplementedCommunicationServiceServer()
 }
 
-func RegisterMessageServiceServer(s grpc.ServiceRegistrar, srv MessageServiceServer) {
-	s.RegisterService(&MessageService_ServiceDesc, srv)
+func RegisterCommunicationServiceServer(s grpc.ServiceRegistrar, srv CommunicationServiceServer) {
+	s.RegisterService(&CommunicationService_ServiceDesc, srv)
 }
 
-func _MessageService_SendMessageUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CommunicationService_SendMessageUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SendMessageRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessageServiceServer).SendMessageUser(ctx, in)
+		return srv.(CommunicationServiceServer).SendMessageUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/user_communication.MessageService/SendMessageUser",
+		FullMethod: "/user_communication.CommunicationService/SendMessageUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServiceServer).SendMessageUser(ctx, req.(*SendMessageRequest))
+		return srv.(CommunicationServiceServer).SendMessageUser(ctx, req.(*SendMessageRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MessageService_ListMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CommunicationService_ListMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListMessageRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessageServiceServer).ListMessage(ctx, in)
+		return srv.(CommunicationServiceServer).ListMessage(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/user_communication.MessageService/ListMessage",
+		FullMethod: "/user_communication.CommunicationService/ListMessage",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServiceServer).ListMessage(ctx, req.(*ListMessageRequest))
+		return srv.(CommunicationServiceServer).ListMessage(ctx, req.(*ListMessageRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MessageService_AddTravelTips_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CommunicationService_AddTravelTips_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddTravelTipsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessageServiceServer).AddTravelTips(ctx, in)
+		return srv.(CommunicationServiceServer).AddTravelTips(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/user_communication.MessageService/AddTravelTips",
+		FullMethod: "/user_communication.CommunicationService/AddTravelTips",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServiceServer).AddTravelTips(ctx, req.(*AddTravelTipsRequest))
+		return srv.(CommunicationServiceServer).AddTravelTips(ctx, req.(*AddTravelTipsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MessageService_GetTravelTips_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CommunicationService_GetTravelTips_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetTravelTipsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessageServiceServer).GetTravelTips(ctx, in)
+		return srv.(CommunicationServiceServer).GetTravelTips(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/user_communication.MessageService/GetTravelTips",
+		FullMethod: "/user_communication.CommunicationService/GetTravelTips",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServiceServer).GetTravelTips(ctx, req.(*GetTravelTipsRequest))
+		return srv.(CommunicationServiceServer).GetTravelTips(ctx, req.(*GetTravelTipsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MessageService_GetUserStatics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CommunicationService_GetUserStatics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserStaticsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessageServiceServer).GetUserStatics(ctx, in)
+		return srv.(CommunicationServiceServer).GetUserStatics(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/user_communication.MessageService/GetUserStatics",
+		FullMethod: "/user_communication.CommunicationService/GetUserStatics",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServiceServer).GetUserStatics(ctx, req.(*GetUserStaticsRequest))
+		return srv.(CommunicationServiceServer).GetUserStatics(ctx, req.(*GetUserStaticsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// MessageService_ServiceDesc is the grpc.ServiceDesc for MessageService service.
+// CommunicationService_ServiceDesc is the grpc.ServiceDesc for CommunicationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var MessageService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "user_communication.MessageService",
-	HandlerType: (*MessageServiceServer)(nil),
+var CommunicationService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "user_communication.CommunicationService",
+	HandlerType: (*CommunicationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "SendMessageUser",
-			Handler:    _MessageService_SendMessageUser_Handler,
+			Handler:    _CommunicationService_SendMessageUser_Handler,
 		},
 		{
 			MethodName: "ListMessage",
-			Handler:    _MessageService_ListMessage_Handler,
+			Handler:    _CommunicationService_ListMessage_Handler,
 		},
 		{
 			MethodName: "AddTravelTips",
-			Handler:    _MessageService_AddTravelTips_Handler,
+			Handler:    _CommunicationService_AddTravelTips_Handler,
 		},
 		{
 			MethodName: "GetTravelTips",
-			Handler:    _MessageService_GetTravelTips_Handler,
+			Handler:    _CommunicationService_GetTravelTips_Handler,
 		},
 		{
 			MethodName: "GetUserStatics",
-			Handler:    _MessageService_GetUserStatics_Handler,
+			Handler:    _CommunicationService_GetUserStatics_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
