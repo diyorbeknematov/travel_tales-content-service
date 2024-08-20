@@ -11,7 +11,7 @@ import (
 
 func NewUserClient(cfg config.Config) (user.AuthServiceClient, error) {
 	connUser, err := grpc.NewClient(
-		fmt.Sprintf("localhost:%s", cfg.USER_CLIENT_PORT),
+		fmt.Sprintf("travel-auth:%s", cfg.USER_CLIENT_PORT),
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, err
